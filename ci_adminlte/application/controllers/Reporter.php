@@ -15,11 +15,7 @@ class Reporter extends CI_Controller {
 		$data['hgs']=$res;
 		$hn_t=$this->coreperformance->hname($res);
 		$data['hns']=$hn_t;
-		//print_r($hn_t);
 		$this->load->view('reporter/index', $data);
-		//print_r($res);
-		//print_r($res[9]);
-		//print_r($res_result());
 	}
 	
 	public function cpudaily(){

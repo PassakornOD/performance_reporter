@@ -5,14 +5,14 @@ class Genpdf extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		//$this->load->model('user','',TRUE);
+		$this->load->model('coreperformance','',TRUE);
 		$this->load->library('Pdf');
 	}
 	
 	public function index(){
 		
-		$this->load->view('pdf/genpdf');
-
+		$data['hg_q']=$this->coreperformance->hgroup();
+		$this->load->view('pdf/genpdf', $data);
 		
 	}
 	public function LoadData($file)

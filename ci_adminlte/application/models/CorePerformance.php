@@ -20,25 +20,17 @@ class CorePerformance extends CI_Model{
 			$data[$hg]=array("hgroup" => $rs[$hg]->hostgroup, "hgroup_id" => $rs[$hg]->hostgroup_id);
 			$hg++;	
 		}
-	
 		return $data;
-		
 	}
 	
 	public function hname($rs){
 		$num=0;
 		foreach($rs as $q){
-			print_r($q['hgroup']);
-			//echo "<br/>";
 			$i=0;
 			$res=$this->coredb->hostname_query($q['hgroup_id']);
 			$rs=$res->result();
 			$data=$rs;
-			//while($row=$res->num_rows()> $i){
-				//$data[$num[$i]]=$rs[$i];
-			//}
 		}
-		//print_r($data);
 		return $data;
 	}
 }

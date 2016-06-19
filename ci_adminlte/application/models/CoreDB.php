@@ -67,12 +67,16 @@ class Coredb extends CI_Model{
 	}
 	
 	public function hostname_query($where){
-		$this->db->select('*');
+		/*$this->db->select('*');
 		$this->db->from('hostname');
 		$this->db->where('hostgroup_id=',$where);
 		$this->db->order_by('hostgroup_id', 'ASC');
 		$res = $this->db->get();
-	
+		*/
+		$this->db->select('*');
+		$this->db->from('hostgroup');
+		$this->db->join('hostname', 'hostname.hostgroup_id = hostgroup.hostgroup_id');
+		$res = $this->db->get();
 		return $res;
 	}
 }

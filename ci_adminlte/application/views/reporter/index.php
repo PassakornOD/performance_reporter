@@ -38,7 +38,8 @@
 									</tr>
 								</thead>
 								<tbody>
-								<?php foreach($hns as $hn){ ?>
+								<?php foreach($hns as $hn){ 
+											if($hn->hostgroup_id == $hg['hgroup_id']){?>
 									<tr>
 										<td><?php echo $hn->hostname; ?></td>
 										<td><?php echo $hn->Model; ?></td>
@@ -47,6 +48,7 @@
 										<td><?php echo $hn->Serial; ?></td>
 										<td><?php echo $hn->Location; ?></td>
 									</tr>
+									<?php } ?>
 								<?php } ?>
 								</tbody>	
 							</table>

@@ -29,7 +29,8 @@ class Login extends CI_Controller {
 				$data['user_sess']=$this->session->userdata("user");
 				$data['perm_sess']=$this->session->userdata("perm");
 			}
-			$this->load->view('reporter/index',$data);
+			//$this->load->view('reporter/index');
+			 redirect("reporter");
 		}
 		else{
 			$this->load->helper(array('form'));

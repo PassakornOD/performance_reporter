@@ -19,6 +19,20 @@
 		
 		<script src="/ci_adminlte/AdminLTE/js/highcharts.js" type="text/javascript"></script>
 		<script src="/ci_adminlte/AdminLTE/js/modules/exporting.js"></script>
+		
+		<!--Custom Script-->
+        <script type="text/javascript" src="/ci_adminlte/AdminLTE/js/custom/cs_script.js"></script>
+		
+		 <!--date time picker Script-->		
+        <!--<script type="text/javascript" src="jqueryui/js/jquery-1.5.1.min.js"></script>-->
+    	<link type="text/css" href="/ci_adminlte/AdminLTE/css/ui-lightness/jquery-ui-1.8.13.custom.css" rel="Stylesheet" />	
+    	<script type="text/javascript" src="/ci_adminlte/AdminLTE/js/jquery-ui-1.8.13.custom.min.js"></script>
+		<style type="text/css">
+            div.ui-datepicker{
+                 font-size:10px;
+                }
+        </style>
+
         <!-- Theme style -->
         
 
