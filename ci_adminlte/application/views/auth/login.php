@@ -30,7 +30,7 @@
 
 <body>
 	 <div id="wrapper">
-		<div class="container">
+		<div class="container" style="margin-top:100px;">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-4">
 					<div class="login-panel panel panel-default">
@@ -38,10 +38,10 @@
 							<h3 class="panel-title">Please Sign In</h3>
 						</div>
 						<div class="panel-body">
-							<form role="form">
+							<form method="post" action="">
 								<fieldset>
 									<div class="form-group">
-										<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+										<input class="form-control" placeholder="Username" name="username" type="text" value="" autofocus>
 									</div>
 									<div class="form-group">
 										<input class="form-control" placeholder="Password" name="password" type="password" value="">
@@ -53,7 +53,8 @@
 									</div>
 									<!-- Change this to a button or input when using this as a form 
 									<a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>-->
-									<?php echo anchor('reporter', 'Login' , array('class' => 'btn btn-lg btn-success btn-block')); ?>
+									<input type="submit" class="btn btn-lg btn-success btn-block" name="btn" value="submit" />
+									<?php //echo anchor('reporter', 'Login' , array('class' => 'btn btn-lg btn-success btn-block', 'name' => 'btn')); ?>
 								</fieldset>
 							</form>
 						</div>

@@ -1,26 +1,35 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class GenPdf extends CI_Controller {
+class Genpdf extends CI_Controller {
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('user','',TRUE);
+		//$this->load->model('user','',TRUE);
 		$this->load->library('Pdf');
 	}
-	function LoadData($file)
+	
+	public function index(){
+		
+		$this->load->view('pdf/genpdf');
+
+		
+	}
+	public function LoadData($file)
 	{
 		//Read file lines
-		$lines=file($file);
+		/*$lines=file($file);
 		$data=array();
 		foreach($lines as $line)
 			$data[]=explode(';',chop($line));
 		return $data;
+		*/
+		
 	}
 	
-	function BasicTable($header,$data)
+	public function BasicTable($header,$data)
 	{
-		//Header
+		/*//Header
 		$w=array(20,20,20,30,30,20,20);
 		//Header
 		for($i=0;$i<count($header);$i++)
@@ -38,11 +47,16 @@ class GenPdf extends CI_Controller {
 			$this->Cell(20,6,$eachResult["Download"],1);
 			$this->Ln();
 		}
+		*/
+		
+		
+		
+		
 	}
 	
-	function createpdf()
+	public function createpdf()
 	{
-		$pdf=new FPDF();
+		/*$pdf=new FPDF();
 		$header=array('Username','MAC Address','AP\'s IP Address','Start time','Stop time','Upload','Download');
 		
 		$result=$this->user->logpdf();
@@ -51,7 +65,11 @@ class GenPdf extends CI_Controller {
 		$pdf->AddPage('L');
 		$pdf->BasicTable($header,$result);
 		
-		$pdf->Output("Logfile.pdf","D");
+		$pdf->Output("Logfile.pdf","D");*/
+		
+		
+		
+		
 	}
 
 }

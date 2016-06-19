@@ -5,16 +5,37 @@ Class User extends CI_Model
     {
         parent::__construct();
 		$this -> load -> helper('date');
+		$this->load->library("session");
+	
     }
-	function login($username, $password)
+	
+	public function ChkSession(){
+		$res="";
+		if($this->input->post("btn") != null){
+			if($this->input->post("username")== null && $this->input->post("password")== null){
+				$res=false;
+			}
+			else{
+				$user_q=$this->input->post("username");
+				$pass_q=$this->input->post("password");
+				$this->load->model('coredb','',TRUE);
+				$res=$this->coredb->user_query($user_q, $pass_q);
+			}
+		}
+		return $res;
+	}
+/*	
+	public function login($username, $password)
 	{
-		$this -> db -> select('Username,Group,Status');
-		$this -> db -> from('raduser');
-		$this -> db -> where('Username', $username);
-		$this -> db -> where('Password', $password);
-		$this -> db -> limit(1);
- 
-		$query = $this -> db -> get();
+		$this->db->select('username,password');
+		$this->db->from('raduser');
+		$this->db->where('Username', $username);
+		$this->db->where('Password', $password);
+		$this->db->limit(1);
+		$ar=array('username' => $username, 'password' => $password);
+		$this->db->from('user')->where($ar);
+		$query = $this->db->get();
+		
  
 	if($query -> num_rows() == 1)
 		return $query->result();
@@ -238,6 +259,6 @@ Class User extends CI_Model
 		else
 			return 0;			
 	}
-	
+	*/
 }
 ?>

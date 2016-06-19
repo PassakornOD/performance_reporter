@@ -1,4 +1,10 @@
-<?php ?>
+<?php 
+	if($this->session->userdata("user")== null){
+		redirect('/','refresh');
+	}
+	$user_s=$this->session->userdata("user");
+	$perm_s=$this->session->userdata("perm");
+?>
 <!DOCTYPE html>
 <html len="en">
 <head>
@@ -33,11 +39,8 @@
                 </a>
                  <div class="navbar-right">
                     <ul class="nav navbar-nav">
-					    <li class="dropdown user user-menu">
-							<a href="logout" class="dropdown-toggle">
-                                <i class="glyphicon glyphicon-user"></i>
-                                <span>Log out</span>
-                            </a>
+					    <li class="dropdown user user-menu" name"logout">
+							<?php echo anchor('login/del_session', '<i class="glyphicon glyphicon-user"></i><span>Log out</span>'); ?>
 						</li>
                     </ul>
                 </div>
@@ -50,7 +53,7 @@
                     <div class="user-panel">
                         <div class="pull-left info">
 						
-							<H1> MFEC </H1>
+							<H3><i class="fa fa-user" aria-hidden="true"></i> <?php echo $user_s; ?> </H3>
                             <!-- Display User profile -->
 							
                         </div>
@@ -59,48 +62,46 @@
                     <!-- /.search form -->
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
+						<li>
+                            <?php echo anchor('reporter','<i class="fa fa-tachometer"></i> <span> Dashborad </span>'); ?>                            
+                        </li>
 						<li class="treeview">
                             <a href="#">
-                                <i class="fa fa-user"></i> <span>User</span>
+                                <i class="fa fa-bar-chart"></i> <span> Performance </span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu" style="display: none;">
-                                <li><a href="index"><i class="fa fa-angle-double-right"></i>User Information</a></li>
-                                <li><a href="checkdt"><i class="fa fa-angle-double-right"></i>Check Status</a></li>    
+                                <li><?php echo anchor('reporter/cpudaily', '<i class="fa fa-angle-double-right"></i> CPU Usage Daily'); ?></li>  
+                                <li><?php echo anchor('reporter/cpumonthly', '<i class="fa fa-angle-double-right"></i> CPU Usage Monthly'); ?></li>  
+                                <li><?php echo anchor('reporter/memdaily', '<i class="fa fa-angle-double-right"></i> Memory Usage Daily'); ?></li>  
+                                <li><?php echo anchor('reporter/memmonthly', '<i class="fa fa-angle-double-right"></i> Memory Usage Monthly'); ?></li>  
+                            </ul>							
+                        </li>
+						<li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-cogs"></i> <span> Utilazation Statistic </span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu" style="display: none;">
+                                <li><?php echo anchor('utilities', '<i class="fa fa-angle-double-right"></i> CPU Utilazation'); ?></li>
+                                <li><?php echo anchor('utilities/memory', '<i class="fa fa-angle-double-right"></i> Memory Utilazation'); ?></li>    
                             </ul>
                         </li>
 						<li class="treeview">
                             <a href="#">
-                                <i class="fa fa-table"></i> <span>Database</span>
+                                <i class="fa fa-wrench"></i> <span> Manage Resource </span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu" style="display: none;">
-                                <li><a href="condb"><i class="fa fa-angle-double-right"></i>Update User</a></li>  
+                                <li><?php echo anchor('utilities', '<i class="fa fa-angle-double-right"></i> Add Resource'); ?></li>
+                                <li><?php echo anchor('genpdf', '<i class="fa fa-angle-double-right"></i> Modifiy Resource'); ?></li>    
                             </ul>
                         </li>
-						<li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-cogs"></i> <span>Management</span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu" style="display: none;">
-                                <li><a href="limitfn"><i class="fa fa-angle-double-right"></i>User Limit</a></li>
-                                <li><a href="chconline"><i class="fa fa-angle-double-right"></i>Check User Online</a></li>    
-								<li><a href="lastlg"><i class="fa fa-angle-double-right"></i>User Last Login</a></li> 
-
-                            </ul>
+						<li>
+                            <?php echo anchor('genpdf', '<i class="fa fa-file-pdf-o"></i> <span> Report </span>'); ?>
                         </li>
-						<li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-bar-chart"></i> <span>Statistic</span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu" style="display: none;">
-								<li><a href="usstat3"><i class="fa fa-angle-double-right"></i>Usage Statistic</a></li>
-								<li><a href="usstat2"><i class="fa fa-angle-double-right"></i>Usage Statistic(Date)</a></li>
-                                <li><a href="usstat"><i class="fa fa-angle-double-right"></i>Usage Statistic(Time)</a></li>
-								<li><a href="logpdf"><i class="fa fa-angle-double-right"></i>Usage Log</a></li>
-                            </ul>
+						<li>
+                            <?php echo anchor('reporter/faq', '<i class="fa fa-support"></i> <span> Faq </span>'); ?>
                         </li>
                     </ul>
                 </section>
