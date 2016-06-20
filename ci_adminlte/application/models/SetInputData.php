@@ -22,20 +22,22 @@ class SetInputData extends CI_Model{
 			$data['startdate']=$startdate;
 			$data['stopdate']=$stopdate;
 			$num=0;
-			foreach($list_host as $lists){
+			$host_list=$list_host[0];
+			//print_r($host_list);
+			foreach($host_list as $lists){
 				
 				//print_r($lists->OS);
-				//print_r($lists->hostname);
-				$this->coreperformance->cpu_usage_daily($lists[$num]->hostgroup, $lists[$num]->hostname, $lists[$num]->hostname_id, $lists[$num]->OS, $startdate, $stopdate, "Average");
-				$num++;
-				
+				//print_r($lists);
+				//print_r($num);
+				$rs=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, "Average");	
+				//print_r($rs['pgpmas801'][0][0]);
 			}	
-				
+			//print_r($num);	
 				
 			//print_r($hostgroup);
 			//print_r($startdate);
 			//print_r($stopdate);
-			print_r($list_host[0][0]->hostname);
+			//print_r($list_host[0][0]->hostname);
 			return $data;
 		}
 			//return $data;

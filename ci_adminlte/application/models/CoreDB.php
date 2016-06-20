@@ -80,35 +80,22 @@ class Coredb extends CI_Model{
 		return $res;
 	}
 	
-	public function sarcpu_query($hostgroup, $hostname, $hostname_id, $startdate, $stopdate, $option){
-		list($startY,$startM,$startD) = explode("-",$startdate);
-		list($stopY,$stopM,$stopD) = explode("-",$stopdate);
-		if($option=="Normal"){
-			$select="*";
-		}
-		else if($option=="Average"){
-			$select="DATE(time),AVG(usr),AVG(nice),AVG(sys),AVG(wio),AVG(steal),AVG(idle),hostname_id";
-			$group=array("DAY(time)", "MONTH(time)");
-		}
-		else{
-			$select="DATE(time),AVG(usr+nice+sys+wio+steal),MIN(idle),hostname_id";
-			$group=array("DAY(time)", "MONTH(time)");
-		}
-		$where="hostname_id='$hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
-		$order="time ASC";
-		
-		
-		
-		$this->db->select($select);
-		$this->db->from($hostgroup.":u");
-		$this->db->where($where);
-		if($option != "Normal"){
-			$this->db->group_by($group);
-		}
-		$this->db->order_by($order);
+	public function sarcpu_query($hostgroup, $sql){
+		//print_r($sql);
+		if($sql['select'] != null)
+			$this->db->select($sql['select']);
+		$this->db->from($hostgroup->hostgroup.":u");
+		if($sql['where'] != null)
+			$this->db->where($sql['where']);
+		if($sql['group'] != null)
+			$this->db->group_by($sql['group']);
+		if($sql['order'] != null)
+			$this->db->order_by($sql['order']);
 		$res = $this->db->get();
-		//print_r($res->result());
-		
+		//print_r($res->result_object());
+		if($res->num_rows() > 0)
+			return $res->result_object();
+		return false;
 	}
 }
 
