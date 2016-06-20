@@ -9,11 +9,6 @@ class Coredb extends CI_Model{
 	}
 	
 	public function User_query($username, $password){
-		//$this->db->select();
-		//$this->db->from('user');
-		//$this->db->where('username', $username);
-		//$this->db->where('password', $password);
-		//$this->db->limit(1);
 		$pass=sha1($password);
 		$res = $this->db->get_where('user',array('username' => $username, 'password' => $pass));
 		if($res->num_rows() == 1){
@@ -66,18 +61,54 @@ class Coredb extends CI_Model{
 		return $res;
 	}
 	
-	public function hostname_query($where){
+	public function hostname_query($where,$select){
 		/*$this->db->select('*');
 		$this->db->from('hostname');
 		$this->db->where('hostgroup_id=',$where);
 		$this->db->order_by('hostgroup_id', 'ASC');
 		$res = $this->db->get();
 		*/
-		$this->db->select('*');
-		$this->db->from('hostgroup');
-		$this->db->join('hostname', 'hostname.hostgroup_id = hostgroup.hostgroup_id');
+		//print_r($where);
+		$this->db->select($select);
+		$this->db->from('hostname');
+		$this->db->join('hostgroup', 'hostname.hostgroup_id = hostgroup.hostgroup_id');
+		if($where != null){
+			$this->db->where('hostgroup=',$where);
+		}
 		$res = $this->db->get();
+		//print_r($res->result());
 		return $res;
+	}
+	
+	public function sarcpu_query($hostgroup, $hostname, $hostname_id, $startdate, $stopdate, $option){
+		list($startY,$startM,$startD) = explode("-",$startdate);
+		list($stopY,$stopM,$stopD) = explode("-",$stopdate);
+		if($option=="Normal"){
+			$select="*";
+		}
+		else if($option=="Average"){
+			$select="DATE(time),AVG(usr),AVG(nice),AVG(sys),AVG(wio),AVG(steal),AVG(idle),hostname_id";
+			$group=array("DAY(time)", "MONTH(time)");
+		}
+		else{
+			$select="DATE(time),AVG(usr+nice+sys+wio+steal),MIN(idle),hostname_id";
+			$group=array("DAY(time)", "MONTH(time)");
+		}
+		$where="hostname_id='$hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
+		$order="time ASC";
+		
+		
+		
+		$this->db->select($select);
+		$this->db->from($hostgroup.":u");
+		$this->db->where($where);
+		if($option != "Normal"){
+			$this->db->group_by($group);
+		}
+		$this->db->order_by($order);
+		$res = $this->db->get();
+		//print_r($res->result());
+		
 	}
 }
 

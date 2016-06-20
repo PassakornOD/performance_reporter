@@ -1,4 +1,4 @@
 RewriteEngine On
 RewriteBase /ci_adminlte/
-RewriteCond $1 !^(index\.php|css|javascript)
+RewriteCond $1 !^(index\.php|css|javascript|user_guide)
 RewriteRule ^(.*)$ index.php [L]

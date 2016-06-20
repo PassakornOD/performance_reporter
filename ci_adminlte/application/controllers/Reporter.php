@@ -13,7 +13,7 @@ class Reporter extends CI_Controller {
 		
 		$res=$this->coreperformance->hgroup();
 		$data['hgs']=$res;
-		$hn_t=$this->coreperformance->hname($res);
+		$hn_t=$this->coreperformance->hname(null,'*');
 		$data['hns']=$hn_t;
 		$this->load->view('reporter/index', $data);
 	}

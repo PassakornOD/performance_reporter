@@ -34,6 +34,7 @@ class Login extends CI_Controller {
 		}
 		else{
 			$this->load->helper(array('form'));
+			//$this->load->view('auth/charts');
 			$this->load->view('auth/login');
 		}
 		

@@ -6,6 +6,7 @@ class Genpdf extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('coreperformance','',TRUE);
+		$this->load->model('setinputdata','',TRUE);
 		$this->load->library('Pdf');
 	}
 	
@@ -13,7 +14,9 @@ class Genpdf extends CI_Controller {
 		
 		$data['hg_q']=$this->coreperformance->hgroup();
 		$this->load->view('pdf/genpdf', $data);
-		
+		if($this->input->post("btchk")){
+			$this->setinputdata->getformpdf();
+		}
 	}
 	public function LoadData($file)
 	{

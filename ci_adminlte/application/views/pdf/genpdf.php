@@ -22,25 +22,27 @@
                     <div id="morris-area-chart"></div>
 						<form method="post" action="">
 							<fieldset>
+							<div style="display:inline-table">
 							<?php foreach($hg_q as $hgq){ ?>
 								<div class="col-lg-3">
 									<div class="checkbox">
 									  <label>
-										<input type="checkbox" value="">
+										<input type="checkbox" value="<?php echo $hgq['hgroup']; ?>" name="hostgroupchk[]">
 										<span> <?php echo $hgq['hgroup']; ?></span>
 									  </label>
 									</div>
 								</div>
 							<?php } ?>
-								<div style="display:block; margin:auto; width:50%"> 
+							</div>
+								<div style="margin:30px auto; width:50%"> 
 									<label for="period"></label>
 										Start Date 
-									<input type="text" name="startdate" id="datepicker" value="" /> 
+									<input type="date" name="startdate" id="datepicker" value="" />
 										Stop Date 
-									<input type="text" name="stopdate" id="datepicker2" value="" />
+									<input type="date" name="stopdate" id="datepicker2" value="" />
 								<div>
-								<div>
-									<input type="submit" class="btn btn-lg btn-success btn-block" name="btn" value="submit" />
+								<div style="margin:20px;">
+									<input type="submit" class="btn btn-lg btn-success btn-block" name="btchk" value="submit" />
 								</div>
 								<?php //echo anchor('reporter', 'Login' , array('class' => 'btn btn-lg btn-success btn-block', 'name' => 'btn')); ?>
 							</fieldset>
