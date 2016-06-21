@@ -51,29 +51,40 @@ class CorePerformance extends CI_Model{
 		//print_r($dataquery->OS);
 		if($dataquery->OS == "RedHat" || $dataquery->OS == "Red Hat"){
 			if($option=="Normal"){
-				$select="*";
-				$where="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
-				$group="";
-				$order="time ASC";
-				$sql=$this->set_flag_query($select, $where ,$group, $order);
+				$data['select']="*";
+				$data['select_avg']="";
+				$data['select_min']="";
+				$data['where']="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
+				$data['group']="";
+				$data['order']="time ASC";
 			}
 			else if($option=="Average"){
-				$select="'DATE(time),AVG(usr),AVG(nice),AVG(sys),AVG(wio),AVG(steal),AVG(idle),hostname_id'";
-				$where="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
-				$group=array("DAY(time)", "MONTH(time)");
-				$order="'time ASC'";
-				$sql=$this->set_flag_query($select, $where ,$group, $order);
+				//$select="'DATE(time),AVG(usr),AVG(nice),AVG(sys),AVG(wio),AVG(steal),AVG(idle),hostname_id'";
+				$data['select']="DATE(time),hostname_id";
+				$data['select_avg']=array("0" => 'usr',
+									 "1" => 'nice',
+									 "2" => 'sys',
+									 "3" => 'wio',
+									 "4" => 'steal',
+									 "5" => 'idle'
+								);
+				$data['select_min']="";
+				$data['where']="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
+				$data['group']=array("DAY(time)", "MONTH(time)");
+				$data['order']="'time ASC'";
 			}
 			else{
-				$select="DATE(time),AVG(usr+nice+sys+wio+steal),MIN(idle),hostname_id";
-				$where="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
-				$group=array("DAY(time)", "MONTH(time)");
-				$order="'time ASC'";
-				$sql=$this->set_flag_query($select, $where ,$group, $order);
+				//$select="DATE(time),AVG(usr+nice+sys+wio+steal),MIN(idle),hostname_id";
+				$data['select']="DATE(time),hostname_id";
+				$data['select_avg']=array( "sum" => "usr+nice+sys+wio+steal" );
+				$data['select_min']=array( "idle" => "idle");
+				$data['where']="hostname_id='$dataquery->hostname_id' AND time BETWEEN date('$startY-$startM-$startD') AND date('$stopY-$stopM-$stopD')";
+				$data['group']=array("DAY(time)", "MONTH(time)");
+				$data['order']="'time ASC'";
 			}
 			//print_r($sql);
 			//foreach()
-			$res=$this->coredb->sarcpu_query($dataquery, $sql);
+			$res=$this->coredb->sarcpu_query($dataquery, $data);
 			
 			//foreach($res as $rs){
 				//$rs->next_row();
@@ -90,7 +101,7 @@ class CorePerformance extends CI_Model{
 	}
 	
 	
-	public function set_flag_query($select, $where ,$group, $order){
+	public function set_flag_query($data){
 		
 		$data['select']=$select;
 		$data['where']=$where;

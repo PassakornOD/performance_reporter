@@ -81,9 +81,17 @@ class Coredb extends CI_Model{
 	}
 	
 	public function sarcpu_query($hostgroup, $sql){
-		//print_r($sql);
+		//print_r($sql['select_avg'][0]);
 		if($sql['select'] != null)
 			$this->db->select($sql['select']);
+		if($sql['select_avg'] != null)
+			for($i=0;$i<count($sql['select_avg']);$i++){
+				//print_r($sql['select_avg'][$i]);
+				$this->db->select_avg($sql['select_avg'][$i]);
+				//print_r($i);
+			}
+		if($sql['select_min'] != null)
+			$this->db->select_min($sql['select_min']);
 		$this->db->from($hostgroup->hostgroup.":u");
 		if($sql['where'] != null)
 			$this->db->where($sql['where']);
@@ -92,7 +100,7 @@ class Coredb extends CI_Model{
 		if($sql['order'] != null)
 			$this->db->order_by($sql['order']);
 		$res = $this->db->get();
-		//print_r($res->result_object());
+		print_r($res->result_object());
 		if($res->num_rows() > 0)
 			return $res->result_object();
 		return false;
