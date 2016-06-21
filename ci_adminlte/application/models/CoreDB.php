@@ -100,9 +100,10 @@ class Coredb extends CI_Model{
 		if($sql['order'] != null)
 			$this->db->order_by($sql['order']);
 		$res = $this->db->get();
-		print_r($res->result_object());
+		$rs=$res->result();
+		//print_r($rs[0]->hostname_id);
 		if($res->num_rows() > 0)
-			return $res->result_object();
+			return $res->result();
 		return false;
 	}
 }

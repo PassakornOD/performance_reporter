@@ -15,8 +15,9 @@ class Genpdf extends CI_Controller {
 		$data['hg_q']=$this->coreperformance->hgroup();
 		$this->load->view('pdf/genpdf', $data);
 		if($this->input->post("btchk")){
-			$this->setinputdata->getformpdf();
+			$result_sar=$this->setinputdata->getformpdf();
 		}
+		$this->load->view('auth/charts');
 	}
 	public function LoadData($file)
 	{

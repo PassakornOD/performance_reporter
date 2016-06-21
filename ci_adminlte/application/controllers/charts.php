@@ -24,11 +24,11 @@ class Charts extends CI_Controller {
 		
 		// some data series
 		$serie['data'] = array(20, 45, 60, 22, 6, 36);
-		
+		//$this->highcharts->set_type('column');
 		$data['charts'] = $this->highcharts->set_serie($serie)->render();
 		
+		$data['charts'] = $this->highcharts->set_serie($serie)->render();
 		$this->load->view('auth/charts', $data);
-		$data['charts'] = $this->highcharts->set_serie($serie)->render();
 	}
 	
 	
@@ -53,14 +53,14 @@ class Charts extends CI_Controller {
 		
 		// we can user credits option to make a link to the source article. 
 		// it's possible to pass an object instead of array (but object will be converted to array by the lib)
-		$credits->href = 'http://www.internetworldstats.com/stats7.htm';
-		$credits->text = "Article on Internet Wold Stats";
-		$this->highcharts->set_credits($credits);
+		//$credits->href = 'http://www.internetworldstats.com/stats7.htm';
+		//$credits->text = "Article on Internet Wold Stats";
+		//$this->highcharts->set_credits($credits);
 		
 		$this->highcharts->render_to('my_div'); // choose a specific div to render to graph
 		
 		$data['charts'] = $this->highcharts->render(); // we render js and div in same time
-		$this->load->view('charts', $data);
+		$this->load->view('auth/charts', $data);
 	}
 	
 	/**
@@ -75,6 +75,7 @@ class Charts extends CI_Controller {
 		$this->highcharts
 			->initialize('chart_template') // load template	
 			->push_xAxis($graph_data['axis']) // we use push to not override template config
+			->push_yAxis($graph_data['axis'])
 			->set_serie($graph_data['users'])
 			->set_serie($graph_data['popul'], 'Another description'); // ovverride serie name 
 		
@@ -82,7 +83,7 @@ class Charts extends CI_Controller {
 		$this->highcharts->set_serie_options(array('type' => 'spline'), 'Another description');
 		
 		$data['charts'] = $this->highcharts->render();
-		$this->load->view('charts', $data);
+		$this->load->view('auth/charts', $data);
 	}
 	
 	/**
@@ -116,7 +117,29 @@ class Charts extends CI_Controller {
 			->add(); // second graph
 		
 		$data['charts'] = $this->highcharts->render();
-		$this->load->view('charts', $data);
+		$this->load->view('auth/charts', $data);
+	}
+	
+
+	function test()
+	{
+		$graph_data = $this->_data();
+
+		$this->load->library('highcharts');
+		$this->highcharts
+			->initialize('cpu_template') // load template
+			->set_dimensions('500px', '400px')	// dimension: width, height
+			->set_title('INTERNET WORLD USERS BY LANGUAGE', 'Top 5 Languages in 2010')
+			->push_xAxis($graph_data['axis']) // we use push to not override template config
+			->set_serie($graph_data['popul'])
+			->set_serie($graph_data['users'], 'Another description'); // ovverride serie name 
+		
+		// we want to display the second serie as sline. First parameter is the serie name
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false)), 'Another description');
+		
+		$data['charts'] = $this->highcharts->render();
+		$this->load->view('auth/charts', $data);
 	}
 	
 	/**
@@ -164,7 +187,7 @@ class Charts extends CI_Controller {
 			->set_plotOptions($plot);
 		
 		$data['charts'] = $this->highcharts->render();
-		$this->load->view('charts', $data);
+		$this->load->view('auth/charts', $data);
 	}
 	
 	
@@ -175,12 +198,12 @@ class Charts extends CI_Controller {
 	 */
 	function _data()
 	{
-		$data['users']['data'] = array(536564837, 444948013, 153309074, 99143700, 82548200);
+		$data['users']['data'] = array(3.6564837, 4.4948013, 5.3309074, 9.143700, 8.548200);
 		$data['users']['name'] = 'Users by Language';
-		$data['popul']['data'] = array(1277528133, 1365524982, 420469703, 126804433, 250372925);
+		$data['popul']['data'] = array(12.77528133, 13.65524982, 42.0469703, 12.6804433, 25.0372925);
 		$data['popul']['name'] = 'World Population';
 		$data['axis']['categories'] = array('English', 'Chinese', 'Spanish', 'Japanese', 'Portuguese');
-		
+
 		return $data;
 	}
 	

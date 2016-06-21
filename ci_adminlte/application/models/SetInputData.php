@@ -29,9 +29,14 @@ class SetInputData extends CI_Model{
 				//print_r($lists->OS);
 				//print_r($lists);
 				//print_r($num);
-				$rs=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, "Average");	
-				//print_r($rs['pgpmas801'][0][0]);
+				$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, "Average");	
+				
 			}	
+				print_r($data['506']);
+				$this
+				echo "<br/>";
+				echo "<br/>";
+				echo "<br/>";
 			//print_r($num);	
 				
 			//print_r($hostgroup);

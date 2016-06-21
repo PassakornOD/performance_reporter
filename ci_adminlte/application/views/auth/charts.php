@@ -36,7 +36,10 @@
 <body>
 	<div id="menu" class="left">
 		<ol>
-			<li><?php echo anchor('charts', 'basic example')?></li>
+			<li><?php echo anchor('charts/categories', 'basic example')?></li>
+			<li><?php echo anchor('charts/template', 'basic example')?></li>
+			<li><?php echo anchor('charts/test', 'basic example')?></li>
+			
 		</ol>
 	</div>
 

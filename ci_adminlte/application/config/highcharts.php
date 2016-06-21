@@ -55,3 +55,47 @@ $config['chart_template'] = array(
 		'shared' => true
 	)
 );
+	
+	$config['cpu_template'] = array(
+	'chart' => array(
+		'renderTo' => 'g_render',
+		'defaultSeriesType' => 'spline',
+		'backgroundColor' => array(
+			'linearGradient' => array(0, 500, 0, 0),
+			'stops' => array(
+				//array(0, 'rgb(255, 255, 255)')
+				//array(1, 'rgb(190, 200, 255)')
+			)
+		),
+     ),
+     'colors' => array(
+     	 '#92A8CD','#AA4643' 
+     ),
+     'credits' => array(
+     	'enabled'=> true,
+     	'text'	=> 'highcharts library on GitHub',
+		'href' => 'https://github.com/ronan-gloo/codeigniter-highcharts-library'
+     ),
+     'title' => array(
+		'text' => 'Template from config file'
+     ),
+     'legend' => array(
+     	'enabled' => false
+     ),
+    'yAxis' => array(
+		'title' => array(
+			'text' => 'Percent'
+		),
+		'min' => 0, 
+			'max' => 100
+	),
+	'xAxis' => array(
+		'title' => array(
+			'text' => 'date'
+		),
+		'labels' => array('rotation'=> -45, 'align' => 'right', 'style' => array('font' => 'normal 10px Verdana, sans-serif' )) 
+	),
+	'tooltip' => array(
+		'shared' => true
+	)
+);

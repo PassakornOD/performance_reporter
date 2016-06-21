@@ -85,14 +85,14 @@ class CorePerformance extends CI_Model{
 			//print_r($sql);
 			//foreach()
 			$res=$this->coredb->sarcpu_query($dataquery, $data);
-			
+			//print_r($res);
 			//foreach($res as $rs){
 				//$rs->next_row();
 				//print_r($rs);
 				//print_r($rs->num_fields());
 			//}
-			$data[$dataquery->hostname]=$res;
-			return $data;
+			
+			return $res;
 		}else{
 			
 			
