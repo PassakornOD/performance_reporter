@@ -16,11 +16,11 @@
 			<!-- Left col -->
 			<section class="col-lg-10">
 				<!-- Custom tabs (Charts with tabs)-->
-				<?php foreach($hgs as $hg){ ?>
+				<?php foreach($hg_info as $hg){?>
 				<div class="nav-tabs-custom" id="User Information">
 					<!-- Tabs within a box -->
 					<ul class="nav nav-tabs pull-right">
-						<li class="pull-left header"><i class="fa fa-inbox"></i><?php echo $hg['hgroup']; ?></li>
+						<li class="pull-left header"><i class="fa fa-inbox"></i><?php echo $hg['hostgroup']; ?></li>
 					</ul>
 					<div class="tab-content no-padding">
 						<!-- Morris chart - Sales -->
@@ -38,8 +38,9 @@
 									</tr>
 								</thead>
 								<tbody>
-								<?php foreach($hns as $hn){ 
-											if($hn->hostgroup_id == $hg['hgroup_id']){?>
+								<?php   $n=0;
+										foreach($hn_info['sql'] as $hn){ //print_r($hn);
+											if($hn->hostgroup_id == $hg['hostgroup_id']){?>
 									<tr>
 										<td><?php echo $hn->hostname; ?></td>
 										<td><?php echo $hn->Model; ?></td>
@@ -48,7 +49,7 @@
 										<td><?php echo $hn->Serial; ?></td>
 										<td><?php echo $hn->Location; ?></td>
 									</tr>
-									<?php } ?>
+									<?php $n++;} ?>
 								<?php } ?>
 								</tbody>	
 							</table>

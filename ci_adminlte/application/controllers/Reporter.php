@@ -10,12 +10,19 @@ class Reporter extends CI_Controller {
 	}
 	
 	public function index(){
+		$num=0;
+		//$this->load->view('reporter/header');
 		
 		$res=$this->coreperformance->hgroup();
-		$data['hgs']=$res;
-		$hn_t=$this->coreperformance->hname(null,'*');
-		$data['hns']=$hn_t;
+		$data['hg_info']=$res;
+		foreach($res as $q){
+		$data['hn_info']=$this->coreperformance->hname(null,'*');
+		}
+		//$this->load->view('reporter/index', $data);
+		
+		
 		$this->load->view('reporter/index', $data);
+		//$this->load->view('reporter/footer');
 	}
 	
 	public function cpudaily(){

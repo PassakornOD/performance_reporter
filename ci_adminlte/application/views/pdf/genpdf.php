@@ -27,8 +27,8 @@
 								<div class="col-lg-3">
 									<div class="checkbox">
 									  <label>
-										<input type="checkbox" value="<?php echo $hgq['hgroup']; ?>" name="hostgroupchk[]">
-										<span> <?php echo $hgq['hgroup']; ?></span>
+										<input type="checkbox" value="<?php echo $hgq['hostgroup']; ?>" name="hostgroupchk[]">
+										<span> <?php echo $hgq['hostgroup']; ?></span>
 									  </label>
 									</div>
 								</div>

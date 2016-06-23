@@ -91,7 +91,8 @@ class Coredb extends CI_Model{
 				//print_r($i);
 			}
 		if($sql['select_min'] != null)
-			$this->db->select_min($sql['select_min']);
+			//print($sql['select_min']['idle']);
+			$this->db->select_min($sql['select_min']['idle']);
 		$this->db->from($hostgroup->hostgroup.":u");
 		if($sql['where'] != null)
 			$this->db->where($sql['where']);

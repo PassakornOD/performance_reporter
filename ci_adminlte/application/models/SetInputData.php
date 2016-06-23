@@ -5,6 +5,7 @@ class SetInputData extends CI_Model{
 	public function __construct(){
 		
 		parent::__construct();
+		$this->load->library('session');
 		$this->load->model('coreperformance','',TRUE);
 	}
 	
@@ -25,27 +26,34 @@ class SetInputData extends CI_Model{
 			$host_list=$list_host[0];
 			//print_r($host_list);
 			foreach($host_list as $lists){
-				
-				//print_r($lists->OS);
-				//print_r($lists);
-				//print_r($num);
-				$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, "Average");	
-				
+				$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, "Average");
+				//$data['ser']=$this->set_data_chart($data,$lists->hostname_id);
+				//redirect('charts/test');
 			}	
-				print_r($data['506']);
-				$this
-				echo "<br/>";
-				echo "<br/>";
-				echo "<br/>";
-			//print_r($num);	
-				
-			//print_r($hostgroup);
-			//print_r($startdate);
-			//print_r($stopdate);
-			//print_r($list_host[0][0]->hostname);
 			return $data;
 		}
 			//return $data;
+	}
+	
+	public function set_data_chart($alldata, $hostname_id){
+		foreach($alldata[$hostname_id] as $q){
+			//print_r($q);
+			$datedata = $q->datetime.", ";
+			//$data['timedata'] .= "";
+			$usrdata = $q->usr.", ";
+			$sysdata = $q->sys.", ";
+			$wiodata = $q->wio.", ";
+			$idledata = $q->idle.", ";
+		}
+		$data['datedata'] = $datedata;
+		$data['usrdata'] = $usrdata;
+		$data['sysdata'] = $sysdata;
+		$data['wiodata'] = $wiodata;
+		$data['idledata'] = $idledata;
+		print_r($usrdata);
+		return $data;
+		//$this->session->keep_flashdata('chartdata', $data);
+		
 	}
 	
 }
