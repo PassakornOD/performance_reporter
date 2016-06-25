@@ -81,6 +81,8 @@ class Coredb extends CI_Model{
 	}
 	
 	public function sarcpu_query($hostgroup, $sql){
+		$index=0;
+		$query_res=false;
 		//print_r($sql['select_avg'][0]);
 		if($sql['select'] != null)
 			$this->db->select($sql['select']);
@@ -100,11 +102,16 @@ class Coredb extends CI_Model{
 			$this->db->group_by($sql['group']);
 		if($sql['order'] != null)
 			$this->db->order_by($sql['order']);
-		$res = $this->db->get();
+		$res=$this->db->get();
 		$rs=$res->result();
-		//print_r($rs[0]->hostname_id);
-		if($res->num_rows() > 0)
-			return $res->result();
+		foreach($rs as $q){
+			$query_res[$q->datetime]=$q;
+		}
+		//print_r($query_res);
+		if($query_res != null){
+			return $query_res;
+		}
+			
 		return false;
 	}
 }

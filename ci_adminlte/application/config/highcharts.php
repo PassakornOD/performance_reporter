@@ -69,7 +69,7 @@ $config['chart_template'] = array(
 		),
      ),
      'colors' => array(
-     	 '#92A8CD','#AA4643' 
+     	 '#92A8CD','#AA4643','#40ff00','#ffff00' 
      ),
      'credits' => array(
      	'enabled'=> true,

@@ -11,6 +11,116 @@ class Charts extends CI_Controller {
 		$this->load->vars($data);
 	}
 	
+	public function get_data(){
+		$n=0;
+		$datachart=$this->session->userdata('datacharts');
+		foreach($datachart['list_group'] as $group){
+			//print_r($group);
+			foreach($datachart['list_name'] as $namehost){
+				print_r($namehost->hostname);
+				$data[$n]=$this->daily_charts($datachart[$namehost->hostname_id], $namehost);
+				//print_r($setdata);
+				//print_r($namehost->hostname);
+				print_r($data[$n]);
+				$data['charts']=$data[$n];
+				$n++;
+				//$data['charts']=$this->daily_charts($setdata, $namehost);
+				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
+			}
+		}
+		$this->load->view('auth/charts', $data);
+		
+	}
+	
+	public function daily_charts($dataatti, $host, $flag =""){
+		
+		$graph_data=$this->_cdaily_data($dataatti);
+		//print_r($graph_data['usr']['data'][0]);
+		$this->load->library('highcharts');
+		$this->highcharts
+			->initialize('cpu_template') // load template
+			->set_dimensions(900, 435)	// dimension: width, height
+			->set_title('Sar dd-mm-yyyy to dd-mm-yyyy', 'hostgroup gggg hostname '. $host->hostname)
+			->push_xAxis($graph_data['axis']) // we use push to not override template config
+			->set_serie($graph_data['usr'])
+			->set_serie($graph_data['sys'], 'sys')
+			->set_serie($graph_data['wio'], 'wio')
+			->set_serie($graph_data['idle'], 'idle'); // ovverride serie name 
+		//print_r($host->hostname);
+		// we want to display the second serie as sline. First parameter is the serie name
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false)), 'sys');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false)), 'wio');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#40ff00', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false)), 'idle');
+		//$this->highcharts->render_to('charts_display');
+		//print_r($host);
+		$data['chart'][$host->hostname] = $this->highcharts->render();
+		//print_r($data['chart']);
+		//$this->load->view('auth/charts', $data);
+		return $data;
+	}
+	
+	function _cdaily_data($dataatts, $flag="")
+	{	$datedata="";
+		settype($usrdata , "float");
+		
+		$usrdata=0;
+		$sysdata=0;
+		$wiodata=0;
+		$idledata=0;
+		foreach($dataatts as $q){
+			//print_r($q);
+			
+			$datedata = $q->datetime.", ";
+			//$data['timedata'] .= "";
+			$usrdata .= (float)($q->usr).", ";
+			$sysdata .= (float)$q->sys.", ";
+			$wiodata .= (float)$q->wio.", ";
+			$idledata .= (float)$q->idle.", ";
+		}
+		//print_r($usrdata);
+		//echo "<br/>";
+		//echo "<br/>";
+		$data['usr']['data'] = array($usrdata);
+		$data['usr']['name'] = 'Usr';
+		$data['sys']['data'] = array($sysdata);
+		$data['sys']['name'] = 'sys';
+		$data['wio']['data'] = array(20.77528133, 30.65524982, 4.0469703, 2.6804433, 50.0372925,);
+		$data['wio']['name'] = 'wio';
+		$data['idle']['data'] = array(3.6564837, 4.4948013, 5.3309074, 9.143700, 8.548200);
+		$data['idle']['name'] = 'idle';
+		$data['axis']['datatime'] = array('English', 'Chinese', 'Spanish', 'Japanese', 'Portuguese');
+	
+		return $data;
+	}
+	
+	public function set_format($data_q){
+	//print_r($data_q['hostname']);
+		foreach($data_q as $q){
+			//print_r($q);
+			$datedata = $q->datetime.", ";
+			//$data['timedata'] .= "";
+			$usrdata = $q->usr.", ";
+			$sysdata = $q->sys.", ";
+			$wiodata = $q->wio.", ";
+			$idledata = $q->idle.", ";
+		}
+		$data['datedata'] = $datedata;
+		$data['usrdata'] = $usrdata;
+		$data['sysdata'] = $sysdata;
+		$data['wiodata'] = $wiodata;
+		$data['idledata'] = $idledata;
+		//print_r($data['usrdata']);
+		return $data;
+		
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * index function.
@@ -120,27 +230,7 @@ class Charts extends CI_Controller {
 	}
 	
 
-	function test()
-	{
-		$this->load->library('highcharts');
-		$this->highcharts
-			->initialize('cpu_template') // load template
-			->set_dimensions(900, 435)	// dimension: width, height
-			->set_title('INTERNET WORLD USERS BY LANGUAGE', 'Top 5 Languages in 2010')
-			->push_xAxis($graph_data['axis']) // we use push to not override template config
-			->set_serie($graph_data['popul'])
-			->set_serie($graph_data['tiew'], 'hi')
-			->set_serie($graph_data['users'], 'Another description'); // ovverride serie name 
-		
-		// we want to display the second serie as sline. First parameter is the serie name
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
-                'shadow' => false, 'marker' => array('enabled' => false)), 'Another description');
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
-                'shadow' => false, 'marker' => array('enabled' => false)), 'hi');
-		
-		$data['charts'] = $this->highcharts->render();
-		$this->load->view('auth/charts', $data);
-	}
+
 	
 	/**
 	 * data_get function.

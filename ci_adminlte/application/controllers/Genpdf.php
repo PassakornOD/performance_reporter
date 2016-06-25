@@ -12,13 +12,21 @@ class Genpdf extends CI_Controller {
 	}
 	
 	public function index(){
-		
+		$res_data="";
 		$data['hg_q']=$this->coreperformance->hgroup();
 		$this->load->view('pdf/genpdf', $data);
 		if($this->input->post("btchk")){
-			$data['rawdata']=$this->getformpdf();
-			//$this->load->view('auth/charts', $data);
+			$res_data=$this->getformpdf();
+			//print_r($res_data);
+			$this->session->set_userdata('datacharts', $res_data);
+			redirect('charts/get_data');
 		}
+		else{
+			//$this->load->view('pdf/genpdf',$data);
+		}
+		//print_r($res_data);
+		//echo "ssss";
+		//redirect('charts/get_data/var');
 		
 	}
 	public function getformpdf(){
@@ -30,16 +38,19 @@ class Genpdf extends CI_Controller {
 			$startdate=$this->input->post("startdate");
 			$stopdate=$this->input->post("stopdate");
 			$sql_select="hostname_id,hostname,OS,hostgroup.hostgroup,hostgroup.hostgroup_id";
+			$data['list_group']=$hostgroup;
+			//$this->load->view('auth/charts');
 			foreach($hostgroup as $group){
 				$list_host=$this->coreperformance->hname($group,$sql_select);
-				//print_r($list_host['sql']);
+				$data['list_name']=$list_host['sql'];
+				//print_r($list_host['sql'][0]);
 				$num=0;
 				foreach($list_host['sql'] as $lists){
 					$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, $type_flag);
 					//print_r($data[$lists->hostname_id]['sql']);
-					//$this->set_format($data[$lists->hostname_id]);
+					//$data_chart=$this->set_format($data[$lists->hostname_id]);
 					//echo "<br/>";
-					//$this->charts->daily_charts($data[$lists->hostname_id]['sql'], $flag);
+					//$this->charts->daily_charts($data_chart, $type_flag);
 					//print_r($data[$lists->hostname_id]);
 					//echo "<br/>";
 				}	
@@ -48,12 +59,12 @@ class Genpdf extends CI_Controller {
 			//echo $num;
 			//return $data;
 		}
-			//return $data;
+			return $data;
 	}
 	public function set_format($data_q){
-	print_r($data_q);
-		while($row=$data_q->num_rows > 0){
-			//print_r($row);
+	//print_r($data_q['hostname']);
+		foreach($data_q as $q){
+			//print_r($q);
 			$datedata = $q->datetime.", ";
 			//$data['timedata'] .= "";
 			$usrdata = $q->usr.", ";
@@ -66,7 +77,7 @@ class Genpdf extends CI_Controller {
 		$data['sysdata'] = $sysdata;
 		$data['wiodata'] = $wiodata;
 		$data['idledata'] = $idledata;
-		//print_r($usrdata);
+		//print_r($data);
 		return $data;
 		
 	}

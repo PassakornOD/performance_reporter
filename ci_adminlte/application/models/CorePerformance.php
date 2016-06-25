@@ -85,7 +85,7 @@ class CorePerformance extends CI_Model{
 				$data['order']="'time ASC'";
 			}
 			$result=$this->coredb->sarcpu_query($dataquery, $data);
-			//print_r($res);
+			//print_r($result);
 		}
 		// case OS not RHEL ************
 		
@@ -121,7 +121,7 @@ class CorePerformance extends CI_Model{
 				$data['order']="'time ASC'";
 			}
 			$result=$this->coredb->sarcpu_query($dataquery, $data);
-			//print_r($res);
+			//print_r($result);
 		}
 		//print_r($data['sardata']);
 		return $result;
