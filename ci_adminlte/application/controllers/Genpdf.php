@@ -37,6 +37,8 @@ class Genpdf extends CI_Controller {
 			$hostgroup=$this->input->post("hostgroupchk");
 			$startdate=$this->input->post("startdate");
 			$stopdate=$this->input->post("stopdate");
+			$data['startdate']=$startdate;
+			$data['stopdate']=$stopdate;
 			$sql_select="hostname_id,hostname,OS,hostgroup.hostgroup,hostgroup.hostgroup_id";
 			$data['list_group']=$hostgroup;
 			//$this->load->view('auth/charts');
@@ -44,16 +46,16 @@ class Genpdf extends CI_Controller {
 				$list_host=$this->coreperformance->hname($group,$sql_select);
 				$data['list_name']=$list_host['sql'];
 				//print_r($list_host['sql'][0]);
-				$num=0;
-				foreach($list_host['sql'] as $lists){
-					$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, $type_flag);
+				//$num=0;
+				//foreach($list_host['sql'] as $lists){
+					//$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, $type_flag);
 					//print_r($data[$lists->hostname_id]['sql']);
 					//$data_chart=$this->set_format($data[$lists->hostname_id]);
 					//echo "<br/>";
 					//$this->charts->daily_charts($data_chart, $type_flag);
 					//print_r($data[$lists->hostname_id]);
 					//echo "<br/>";
-				}	
+				//}	
 			}
 			//print_r($data[$lists->hostname_id]['sardata']);
 			//echo $num;

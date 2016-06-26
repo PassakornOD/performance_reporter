@@ -17,18 +17,18 @@ $config['shared_options'] = array(
 // Template Example
 $config['chart_template'] = array(
 	'chart' => array(
-		'renderTo' => 'graph',
+		'renderTo' => '',
 		'defaultSeriesType' => 'column',
 		'backgroundColor' => array(
 			'linearGradient' => array(0, 500, 0, 0),
 			'stops' => array(
-				array(0, 'rgb(255, 255, 255)'),
-				array(1, 'rgb(190, 200, 255)')
+				//array(0, 'rgb(255, 255, 255)'),
+				//array(1, 'rgb(190, 200, 255)')
 			)
 		),
      ),
      'colors' => array(
-     	 '#ED561B', '#50B432'
+     	 '#ED561B', '#50B432','#ED561B', '#50B432'
      ),
      'credits' => array(
      	'enabled'=> true,
@@ -59,7 +59,7 @@ $config['chart_template'] = array(
 	$config['cpu_template'] = array(
 	'chart' => array(
 		'renderTo' => 'g_render',
-		'defaultSeriesType' => 'spline',
+		'defaultSeriesType' => 'area',
 		'backgroundColor' => array(
 			'linearGradient' => array(0, 500, 0, 0),
 			'stops' => array(
@@ -69,7 +69,7 @@ $config['chart_template'] = array(
 		),
      ),
      'colors' => array(
-     	 '#92A8CD','#AA4643','#40ff00','#ffff00' 
+     	'#ffff00' ,'#AA4643','#40ff00','#92A8CD'
      ),
      'credits' => array(
      	'enabled'=> true,

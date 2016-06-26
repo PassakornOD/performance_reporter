@@ -31,9 +31,8 @@
 		
 </head>
 <body>
-	<?php foreach($charts as $chartm){ ?>
-		<div id="charts_display" ><?php print_r($chartm); ?></div>
+	<?php foreach($charts as $chart){ ?>
+		<div id="<?php ?>" ><?php print_r($chart);//echo $chart['charts']; ?></div>
 	<?php } ?>
-	
 </body>
 <?php //$this->load->view('reporter/footer'); ?>

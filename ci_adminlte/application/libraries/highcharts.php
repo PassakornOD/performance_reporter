@@ -288,6 +288,7 @@ class Highcharts {
 		if ( ! $serie_name AND ! isset($options['name']))
 		{
 			$serie_name = count($this->opts['series']);
+			//print_r($options['name']);
 		}
 		// override with the serie name passed
 		else if ($serie_name AND isset($options['name']))

@@ -5,7 +5,7 @@ class Charts extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->model('coreperformance','',TRUE);
 		$this->load->helper('url');
 		$data['home'] = strtolower(__CLASS__).'/';
 		$this->load->vars($data);
@@ -13,39 +13,49 @@ class Charts extends CI_Controller {
 	
 	public function get_data(){
 		$n=0;
+		$type_flag="Average";
 		$datachart=$this->session->userdata('datacharts');
+		//$data['charts']=$this->daily_charts($datachart['508'], $datachart['list_name']);
+		//print_r($datachart);
 		foreach($datachart['list_group'] as $group){
 			//print_r($group);
 			foreach($datachart['list_name'] as $namehost){
-				print_r($namehost->hostname);
-				$data[$n]=$this->daily_charts($datachart[$namehost->hostname_id], $namehost);
+				//$this->set_format();
+				//print_r($namehost->hostname);
+				$dataquery[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
+				$eachchart=$this->daily_charts($dataquery[$namehost->hostname_id], $namehost);
 				//print_r($setdata);
 				//print_r($namehost->hostname);
-				print_r($data[$n]);
-				$data['charts']=$data[$n];
+				//print_r($data[$n]);
+				$data['charts']=$eachchart;
+				print_r($data['charts']);
+				$this->load->view('auth/charts', $data);
 				$n++;
+				
 				//$data['charts']=$this->daily_charts($setdata, $namehost);
 				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
 			}
 		}
-		$this->load->view('auth/charts', $data);
+		//print_r($data);
+		//$this->load->view('auth/charts', $data);
 		
 	}
 	
-	public function daily_charts($dataatti, $host, $flag =""){
+	public function daily_charts($dataatti, $host){
 		
 		$graph_data=$this->_cdaily_data($dataatti);
-		//print_r($graph_data['usr']['data'][0]);
+		//print_r($graph_data);
 		$this->load->library('highcharts');
+		//$chartsObj = new Highcharts();
 		$this->highcharts
 			->initialize('cpu_template') // load template
 			->set_dimensions(900, 435)	// dimension: width, height
-			->set_title('Sar dd-mm-yyyy to dd-mm-yyyy', 'hostgroup gggg hostname '. $host->hostname)
-			->push_xAxis($graph_data['axis']) // we use push to not override template config
-			->set_serie($graph_data['usr'])
-			->set_serie($graph_data['sys'], 'sys')
-			->set_serie($graph_data['wio'], 'wio')
-			->set_serie($graph_data['idle'], 'idle'); // ovverride serie name 
+			->set_title('Sar dd-mm-yyyy to dd-mm-yyyy', 'hostgroup '. $host->hostgroup. '   hostname '. $host->hostname)
+			->push_xAxis($graph_data[$host->hostname_id]['axis']) // we use push to not override template config
+			->set_serie($graph_data[$host->hostname_id]['usr'])
+			->set_serie($graph_data[$host->hostname_id]['sys'], 'sys')
+			->set_serie($graph_data[$host->hostname_id]['wio'], 'wio')
+			->set_serie($graph_data[$host->hostname_id]['idle'], 'idle'); // ovverride serie name 
 		//print_r($host->hostname);
 		// we want to display the second serie as sline. First parameter is the serie name
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
@@ -54,66 +64,81 @@ class Charts extends CI_Controller {
                 'shadow' => false, 'marker' => array('enabled' => false)), 'wio');
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#40ff00', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false)), 'idle');
-		//$this->highcharts->render_to('charts_display');
-		//print_r($host);
-		$data['chart'][$host->hostname] = $this->highcharts->render();
-		//print_r($data['chart']);
+		$this->highcharts->render_to($host->hostname);
+		//print_r($host->hostname);
+		//$chartsObj = new Highcharts();
+		//print_r($chartsObj);
+		$data['charts']=$this->highcharts->render();
 		//$this->load->view('auth/charts', $data);
 		return $data;
 	}
 	
 	function _cdaily_data($dataatts, $flag="")
-	{	$datedata="";
-		settype($usrdata , "float");
-		
-		$usrdata=0;
-		$sysdata=0;
-		$wiodata=0;
-		$idledata=0;
+	{
 		foreach($dataatts as $q){
 			//print_r($q);
-			
-			$datedata = $q->datetime.", ";
+			/*
+			$datedata[] = $q->datetime;
 			//$data['timedata'] .= "";
-			$usrdata .= (float)($q->usr).", ";
-			$sysdata .= (float)$q->sys.", ";
-			$wiodata .= (float)$q->wio.", ";
-			$idledata .= (float)$q->idle.", ";
+			$usrdata[] = (float)$q->usr;
+			$sysdata[] = (float)$q->sys;
+			$wiodata[] = (float)$q->wio;
+			$idledata[] = (float)$q->idle;
+			*/
+			$data[$q->hostname_id]['usr']['data'][] = (float)$q->usr;
+			$data[$q->hostname_id]['usr']['name'] = 'Usr';
+			$data[$q->hostname_id]['sys']['data'][] = (float)$q->sys;
+			$data[$q->hostname_id]['sys']['name'] = 'sys';
+			$data[$q->hostname_id]['wio']['data'][] = (float)$q->wio;
+			$data[$q->hostname_id]['wio']['name'] = 'wio';
+			$data[$q->hostname_id]['idle']['data'][] = (float)$q->idle;
+			$data[$q->hostname_id]['idle']['name'] = 'idle';
+			$data[$q->hostname_id]['axis']['categories'][] = (String)$q->datetime;
 		}
-		//print_r($usrdata);
-		//echo "<br/>";
-		//echo "<br/>";
-		$data['usr']['data'] = array($usrdata);
-		$data['usr']['name'] = 'Usr';
-		$data['sys']['data'] = array($sysdata);
-		$data['sys']['name'] = 'sys';
-		$data['wio']['data'] = array(20.77528133, 30.65524982, 4.0469703, 2.6804433, 50.0372925,);
-		$data['wio']['name'] = 'wio';
-		$data['idle']['data'] = array(3.6564837, 4.4948013, 5.3309074, 9.143700, 8.548200);
-		$data['idle']['name'] = 'idle';
-		$data['axis']['datatime'] = array('English', 'Chinese', 'Spanish', 'Japanese', 'Portuguese');
-	
 		return $data;
 	}
 	
 	public function set_format($data_q){
-	//print_r($data_q['hostname']);
-		foreach($data_q as $q){
-			//print_r($q);
-			$datedata = $q->datetime.", ";
-			//$data['timedata'] .= "";
-			$usrdata = $q->usr.", ";
-			$sysdata = $q->sys.", ";
-			$wiodata = $q->wio.", ";
-			$idledata = $q->idle.", ";
+		$data = array(); 
+		$data[] = array( 
+		"wio" => "2.52353" 
+		); 
+		$data[] = array( 
+		"wio" => "35.0256" 
+		); 
+		$data[] = array( 
+		"wio" => "892.145" 
+		); 
+		$data[] = array( 
+		"wio" => "789.23" 
+		); 
+		$data[] = array( 
+		"wio" => "4513" 
+		); 
+		 
+		 print_r($data);
+		foreach($data as $eachObject) { 
+		echo $eachObject["wio"]; 
+		echo "<br>"; 
+		echo gettype($eachObject["wio"]); 
+		echo "<br>"; 
+		} 
+		 
+		 
+		$correctData = array(); 
+		$correctData["wio"] = []; 
+		$correctData["wio"]["data"] = []; 
+		 
+		foreach($data as $eachObject) { 
+		$correctData["wio"]["data"][] = (float)$eachObject["wio"]; 
+		} 
+		 print_r($correctData);
+		foreach($correctData["wio"]["data"] as $eachData) { 
+		echo $eachData; 
+		echo "<br>"; 
+		echo gettype($eachData); 
+		echo "<br>"; 
 		}
-		$data['datedata'] = $datedata;
-		$data['usrdata'] = $usrdata;
-		$data['sysdata'] = $sysdata;
-		$data['wiodata'] = $wiodata;
-		$data['idledata'] = $idledata;
-		//print_r($data['usrdata']);
-		return $data;
 		
 	}
 	
@@ -125,7 +150,7 @@ class Charts extends CI_Controller {
 	/**
 	 * index function.
 	 * Very basic example: juste draw some data
-	 */
+	
 	function index()
 	{
 		// simple highcharts example
@@ -144,7 +169,7 @@ class Charts extends CI_Controller {
 	/**
 	 * categories function.
 	 * Lets go for a real world example
-	 */
+	 
 	function categories()
 	{		
 		
@@ -175,7 +200,7 @@ class Charts extends CI_Controller {
 	/**
 	 * template function.
 	 * Load basic graph structure form template located in config file
-	 */
+	 
 	function template()
 	{
 		$graph_data = $this->_data();
@@ -201,7 +226,7 @@ class Charts extends CI_Controller {
 	 * 
 	 * @access public
 	 * @return void
-	 */
+	 
 	function active_record()
 	{
 		$result = $this->_ar_data();
@@ -235,7 +260,7 @@ class Charts extends CI_Controller {
 	/**
 	 * data_get function.
 	* Output data as array on json string
-	 */
+	 
 	function data_get()
 	{
 		$this->load->library('highcharts');
@@ -256,7 +281,7 @@ class Charts extends CI_Controller {
 	 * 
 	 * @access public
 	 * @return void
-	 */
+	 
 	function pie()
 	{
 		$this->load->library('highcharts');
@@ -285,7 +310,7 @@ class Charts extends CI_Controller {
 	/**
 	 * _data function.
 	 * data for examples
-	 */
+	 
 	function _data()
 	{
 		$data['users']['data'] = array(3.6564837, 4.4948013, 5.3309074, 9.143700, 8.548200,);
@@ -313,7 +338,7 @@ class Charts extends CI_Controller {
 	/**
 	 * _ar_data function.
 	 * simulate Active Record result
-	 */
+	 
 	function _ar_data()
 	{
 		$data = $this->_data();
@@ -327,7 +352,7 @@ class Charts extends CI_Controller {
 		}
 		return $output;
 	}
-	
+	*/
 }
 
 /* End of file welcome.php */
