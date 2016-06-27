@@ -6,8 +6,8 @@ $config['shared_options'] = array(
 		'backgroundColor' => array(
 			'linearGradient' => array(0, 0, 500, 500),
 			'stops' => array(
-				array(0, 'rgb(255, 255, 255)'),
-				array(1, 'rgb(240, 240, 255)')
+				//array(0, 'rgb(255, 255, 255)'),
+				//array(1, 'rgb(240, 240, 255)')
 			)
 		),
 		'shadow' => false
@@ -61,26 +61,14 @@ $config['chart_template'] = array(
 		'renderTo' => 'g_render',
 		'defaultSeriesType' => 'area',
 		'backgroundColor' => array(
-			'linearGradient' => array(0, 500, 0, 0),
+			'linearGradient' => array(0, 0, 0, 0),
 			'stops' => array(
 				//array(0, 'rgb(255, 255, 255)')
 				//array(1, 'rgb(190, 200, 255)')
 			)
 		),
      ),
-	 'plotOptions' => array(
-				'area' => array( 
-					'stacking' => 'normal',
-					'lineColor' => '#666666',
-					'lineWidth' => 1,
-					'mark' => array(
-						'lineWidth' => 1,
-						'lineColor' => '#666666'
-					)
-				)
-	 ),
      'colors' => array(
-     	'#ffff00' ,'#AA4643','#40ff00','#92A8CD'
      ),
      'credits' => array(
      	'enabled'=> true,
@@ -105,6 +93,9 @@ $config['chart_template'] = array(
 			'text' => ''
 		),
 		'labels' => array('rotation'=> -45, 'align' => 'right', 'style' => array('font' => 'normal 10px Verdana, sans-serif' )) 
+	),
+	'exporting' => array(
+		'enabled' => true
 	),
 	'tooltip' => array(
 		'shared' => true

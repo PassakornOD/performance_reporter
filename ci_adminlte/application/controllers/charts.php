@@ -24,7 +24,7 @@ class Charts extends CI_Controller {
 				//print_r($namehost->hostname);
 				$dataquery[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
 				$eachchart=$this->daily_charts($dataquery[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
-				//print_r($setdata);
+				//print_r($eachchart);
 				//print_r($namehost->hostname);
 				//print_r($data[$n]);
 				$data['charts']=$eachchart;
@@ -43,27 +43,51 @@ class Charts extends CI_Controller {
 	
 	public function daily_charts($dataatti, $start, $stop, $host, $type){
 		
-		$graph_data=$this->_cdaily_data($dataatti);
+		$graph_data=$this->_cdaily_data($dataatti,$type);
 		//print_r($graph_data);
 		$this->load->library('highcharts');
 		//$chartsObj = new Highcharts();
+		if($type=="Average"){
 		$this->highcharts
 			->initialize('cpu_template') // load template
-			->set_dimensions(900, 435)	// dimension: width, height
+			->set_dimensions(900, 495)	// dimension: width, height
 			->set_title('Sar '. $start .  ' to '. $stop , 'Hostname : '. $host->hostname. '   Type : '. $type)
 			->push_xAxis($graph_data[$host->hostname_id]['axis']) // we use push to not override template config
-			->set_serie($graph_data[$host->hostname_id]['usr'])
-			->set_serie($graph_data[$host->hostname_id]['sys'], 'sys')
+			->set_serie($graph_data[$host->hostname_id]['idle'], 'idle')
 			->set_serie($graph_data[$host->hostname_id]['wio'], 'wio')
-			->set_serie($graph_data[$host->hostname_id]['idle'], 'idle'); // ovverride serie name 
+			->set_serie($graph_data[$host->hostname_id]['nice'], 'nice')
+			->set_serie($graph_data[$host->hostname_id]['usr'], 'usr')
+			->set_serie($graph_data[$host->hostname_id]['steal'], 'steal')
+			->set_serie($graph_data[$host->hostname_id]['sys'], 'sys'); // ovverride serie name 
 		//print_r($host->hostname);
 		// we want to display the second serie as sline. First parameter is the serie name
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
-                'shadow' => false, 'marker' => array('enabled' => false)), 'sys');
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#92A8CD'), 'idle');
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
-                'shadow' => false, 'marker' => array('enabled' => false)), 'wio');
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#40ff00', 'lineWidth' => '0.1',
-                'shadow' => false, 'marker' => array('enabled' => false)), 'idle');
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#40ff000'), 'sys');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#ffff00'), 'wio');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#AA4643'), 'steal');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#cc6666'), 'nice');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#FFCC00'), 'usr');
+			}else{
+		$this->highcharts
+			->initialize('cpu_template') // load template
+			->set_dimensions(900, 495)	// dimension: width, height
+			->set_title('Sar '. $start .  ' to '. $stop , 'Hostname : '. $host->hostname. '   Type : '. $type)
+			->push_xAxis($graph_data[$host->hostname_id]['axis']) // we use push to not override template config
+			->set_serie($graph_data[$host->hostname_id]['nice'], '%peak')
+			->set_serie($graph_data[$host->hostname_id]['usr'], '%avg');
+		$this->highcharts->set_serie_options(array('type' => 'spline','stacking' => null ,'lineColor' => '#ff0000', 'lineWidth' => '0.8',
+                'shadow' => false, 'marker' => array('enabled' => true),'color' => '#AA4643'), '%peak');
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+                'shadow' => false, 'marker' => array('enabled' => false),'color' => '#92A8CD'), '%avg');
+			}	
+				
+				
 		$this->highcharts->render_to($host->hostname);
 		//print_r($host->hostname);
 		//$chartsObj = new Highcharts();
@@ -73,18 +97,32 @@ class Charts extends CI_Controller {
 		return $data;
 	}
 	
-	function _cdaily_data($dataatts, $flag="")
+	function _cdaily_data($dataatts, $flag)
 	{
 		foreach($dataatts as $q){
+			//print_r($q);
 			
-			$data[$q->hostname_id]['usr']['data'][] = (float)$q->usr;
-			$data[$q->hostname_id]['usr']['name'] = 'Usr';
-			$data[$q->hostname_id]['sys']['data'][] = (float)$q->sys;
-			$data[$q->hostname_id]['sys']['name'] = 'sys';
-			$data[$q->hostname_id]['wio']['data'][] = (float)$q->wio;
-			$data[$q->hostname_id]['wio']['name'] = 'wio';
-			$data[$q->hostname_id]['idle']['data'][] = (float)$q->idle;
-			$data[$q->hostname_id]['idle']['name'] = 'idle';
+			
+			if($flag=="Average"){
+				$data[$q->hostname_id]['nice']['data'][] = (float)$q->nice;
+				$data[$q->hostname_id]['nice']['name'] = 'nice';
+				$data[$q->hostname_id]['usr']['data'][] = (float)$q->usr;
+				$data[$q->hostname_id]['usr']['name'] = 'Usr';
+				$data[$q->hostname_id]['sys']['data'][] = (float)$q->sys;
+				$data[$q->hostname_id]['sys']['name'] = 'sys';
+				$data[$q->hostname_id]['wio']['data'][] = (float)$q->wio;
+				$data[$q->hostname_id]['wio']['name'] = 'wio';
+				$data[$q->hostname_id]['idle']['data'][] = (float)$q->idle;
+				$data[$q->hostname_id]['idle']['name'] = 'idle';
+				$data[$q->hostname_id]['steal']['data'][] = (float)$q->steal;
+				$data[$q->hostname_id]['steal']['name'] = 'steal';
+			}
+			else{				
+				$data[$q->hostname_id]['nice']['data'][] = 100-(float)$q->idle;
+				$data[$q->hostname_id]['nice']['name'] = '%peak';
+				$data[$q->hostname_id]['usr']['data'][] = (float)$q->avgcol;
+				$data[$q->hostname_id]['usr']['name'] = '%avg';
+			}
 			$data[$q->hostname_id]['axis']['categories'][] = (String)$q->datetime;
 		}
 		return $data;

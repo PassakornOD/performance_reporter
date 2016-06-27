@@ -12,6 +12,7 @@
 		<title>MFEC REPORTER</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 		
+		
 		<link href="/ci_adminlte/bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		<link href="/ci_adminlte/AdminLTE/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 		<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -19,6 +20,7 @@
 		
 		<script src="/ci_adminlte/AdminLTE/js/highcharts.js" type="text/javascript"></script>
 		<script src="/ci_adminlte/AdminLTE/js/modules/exporting.js"></script>
+		
 		
 		<!--Custom Script-->
         <script type="text/javascript" src="/ci_adminlte/AdminLTE/js/custom/cs_script.js"></script>
@@ -34,35 +36,7 @@
         </style>
 
         <!-- Theme style -->
-        	<style type="text/css">
-		a, a:link, a:visited {
-			color: #444;
-			text-decoration: none;
-		}
-		a:hover {
-			color: #000;
-		}
-		.left {
-			float: left;
-		}
-		#menu {
-			width: 50%; 
-		}
-		#g_render {
-			width: 80%;
-		}
-		li {
-			margin-bottom: 1em;
-		}
-	</style>
-	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-	<script type="text/javascript">
-		google.load("jquery", "1.4.4");
-	</script>
-	<script type="text/javascript" src="http://www.highcharts.com/js/highcharts.js"></script>
-	<script src="/ci_adminlte/AdminLTE/js/highcharts.js" type="text/javascript"></script>
-	<script src="/ci_adminlte/AdminLTE/js/modules/exporting.js"></script>
-
+   
 </head>
 <body class="skin-blue">
 	<header class="header">

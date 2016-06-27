@@ -5,7 +5,7 @@
 <!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Dashboard
+			CPU Usege Daily
 			<!--<small>Control panel</small>-->
 		</h1>
 	</section>
@@ -18,7 +18,9 @@
 			<section class="col-lg-10">
 				<!-- Custom tabs (Charts with tabs)-->
 				<?php foreach($charts as $chart){ ?>
+					<br/>
 					<div id="<?php ?>" ><?php echo $chart; ?></div>
+					<br/>
 				<?php } ?>
 			</section><!-- /.Left col -->
 		</div><!-- /.row (main row) -->
