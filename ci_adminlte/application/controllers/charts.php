@@ -16,32 +16,32 @@ class Charts extends CI_Controller {
 		$type_flag="Average";
 		$datachart=$this->session->userdata('datacharts');
 		//$data['charts']=$this->daily_charts($datachart['508'], $datachart['list_name']);
-		//print_r($datachart);
+		//print_r($datachart['startdate']);
 		foreach($datachart['list_group'] as $group){
 			//print_r($group);
 			foreach($datachart['list_name'] as $namehost){
 				//$this->set_format();
 				//print_r($namehost->hostname);
 				$dataquery[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
-				$eachchart=$this->daily_charts($dataquery[$namehost->hostname_id], $namehost);
+				$eachchart=$this->daily_charts($dataquery[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
 				//print_r($setdata);
 				//print_r($namehost->hostname);
 				//print_r($data[$n]);
 				$data['charts']=$eachchart;
-				print_r($data['charts']);
-				$this->load->view('auth/charts', $data);
-				$n++;
+				//print_r($data['charts']);
+				//$this->load->view('auth/charts', $data);
+				//$n++;
 				
 				//$data['charts']=$this->daily_charts($setdata, $namehost);
 				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
 			}
 		}
 		//print_r($data);
-		//$this->load->view('auth/charts', $data);
+		$this->load->view('auth/charts', $data);
 		
 	}
 	
-	public function daily_charts($dataatti, $host){
+	public function daily_charts($dataatti, $start, $stop, $host, $type){
 		
 		$graph_data=$this->_cdaily_data($dataatti);
 		//print_r($graph_data);
@@ -50,7 +50,7 @@ class Charts extends CI_Controller {
 		$this->highcharts
 			->initialize('cpu_template') // load template
 			->set_dimensions(900, 435)	// dimension: width, height
-			->set_title('Sar dd-mm-yyyy to dd-mm-yyyy', 'hostgroup '. $host->hostgroup. '   hostname '. $host->hostname)
+			->set_title('Sar '. $start .  ' to '. $stop , 'Hostname : '. $host->hostname. '   Type : '. $type)
 			->push_xAxis($graph_data[$host->hostname_id]['axis']) // we use push to not override template config
 			->set_serie($graph_data[$host->hostname_id]['usr'])
 			->set_serie($graph_data[$host->hostname_id]['sys'], 'sys')
@@ -58,11 +58,11 @@ class Charts extends CI_Controller {
 			->set_serie($graph_data[$host->hostname_id]['idle'], 'idle'); // ovverride serie name 
 		//print_r($host->hostname);
 		// we want to display the second serie as sline. First parameter is the serie name
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false)), 'sys');
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false)), 'wio');
-		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#40ff00', 'lineWidth' => '0.1',
+		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#40ff00', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false)), 'idle');
 		$this->highcharts->render_to($host->hostname);
 		//print_r($host->hostname);
@@ -76,15 +76,7 @@ class Charts extends CI_Controller {
 	function _cdaily_data($dataatts, $flag="")
 	{
 		foreach($dataatts as $q){
-			//print_r($q);
-			/*
-			$datedata[] = $q->datetime;
-			//$data['timedata'] .= "";
-			$usrdata[] = (float)$q->usr;
-			$sysdata[] = (float)$q->sys;
-			$wiodata[] = (float)$q->wio;
-			$idledata[] = (float)$q->idle;
-			*/
+			
 			$data[$q->hostname_id]['usr']['data'][] = (float)$q->usr;
 			$data[$q->hostname_id]['usr']['name'] = 'Usr';
 			$data[$q->hostname_id]['sys']['data'][] = (float)$q->sys;

@@ -10,7 +10,7 @@ $config['shared_options'] = array(
 				array(1, 'rgb(240, 240, 255)')
 			)
 		),
-		'shadow' => true
+		'shadow' => false
 	)
 );
 
@@ -68,6 +68,17 @@ $config['chart_template'] = array(
 			)
 		),
      ),
+	 'plotOptions' => array(
+				'area' => array( 
+					'stacking' => 'normal',
+					'lineColor' => '#666666',
+					'lineWidth' => 1,
+					'mark' => array(
+						'lineWidth' => 1,
+						'lineColor' => '#666666'
+					)
+				)
+	 ),
      'colors' => array(
      	'#ffff00' ,'#AA4643','#40ff00','#92A8CD'
      ),
@@ -80,7 +91,7 @@ $config['chart_template'] = array(
 		'text' => 'Template from config file'
      ),
      'legend' => array(
-     	'enabled' => false
+     	'enabled' => true
      ),
     'yAxis' => array(
 		'title' => array(
@@ -91,7 +102,7 @@ $config['chart_template'] = array(
 	),
 	'xAxis' => array(
 		'title' => array(
-			'text' => 'date'
+			'text' => ''
 		),
 		'labels' => array('rotation'=> -45, 'align' => 'right', 'style' => array('font' => 'normal 10px Verdana, sans-serif' )) 
 	),
