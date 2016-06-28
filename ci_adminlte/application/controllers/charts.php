@@ -13,7 +13,7 @@ class Charts extends CI_Controller {
 	
 	public function get_data(){
 		$n=0;
-		$type_flag="Average";
+		$type_flag="Peak";
 		$datachart=$this->session->userdata('datacharts');
 		//$data['charts']=$this->daily_charts($datachart['508'], $datachart['list_name']);
 		//print_r($datachart['startdate']);
@@ -22,12 +22,14 @@ class Charts extends CI_Controller {
 			foreach($datachart['list_name'] as $namehost){
 				//$this->set_format();
 				//print_r($namehost->hostname);
-				$dataquery[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
-				$eachchart=$this->daily_charts($dataquery[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
+				$datapeak[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
+				$chart=$this->daily_charts($datapeak[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
+				$dataavg[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], "Average");
+				$chart=$this->daily_charts($dataavg[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, "Average");
 				//print_r($eachchart);
 				//print_r($namehost->hostname);
 				//print_r($data[$n]);
-				$data['charts']=$eachchart;
+				$data['charts'][]=$chart;
 				//print_r($data['charts']);
 				//$this->load->view('auth/charts', $data);
 				//$n++;
@@ -73,6 +75,9 @@ class Charts extends CI_Controller {
                 'shadow' => false, 'marker' => array('enabled' => false),'color' => '#cc6666'), 'nice');
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => 'normal' ,'lineColor' => '#000000', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false),'color' => '#FFCC00'), 'usr');
+		$this->highcharts->render_to($host->hostname);
+		$data['avgcharts']=$this->highcharts->render();
+		echo "eeeee";
 			}else{
 		$this->highcharts
 			->initialize('cpu_template') // load template
@@ -85,14 +90,13 @@ class Charts extends CI_Controller {
                 'shadow' => false, 'marker' => array('enabled' => true),'color' => '#AA4643'), '%peak');
 		$this->highcharts->set_serie_options(array('type' => 'area','stacking' => null ,'lineColor' => '#000000', 'lineWidth' => '0.1',
                 'shadow' => false, 'marker' => array('enabled' => false),'color' => '#92A8CD'), '%avg');
+		$this->highcharts->render_to($host->hostname);
+		$data['peakcharts']=$this->highcharts->render();
+		echo "asdfsadf";
 			}	
 				
 				
-		$this->highcharts->render_to($host->hostname);
-		//print_r($host->hostname);
-		//$chartsObj = new Highcharts();
-		//print_r($chartsObj);
-		$data['charts']=$this->highcharts->render();
+		
 		//$this->load->view('auth/charts', $data);
 		return $data;
 	}
