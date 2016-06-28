@@ -19,8 +19,7 @@
 				<!-- Custom tabs (Charts with tabs)-->
 				<?php foreach($charts as $chart){ ?>
 					<br/>
-					<div id="<?php ?>" ><?php print_r($chart);//echo $chart['peak']; ?></div>
-					<div id="<?php ?>" ><?php print_r($chart);//echo $chart['average']; ?></div>
+					<div id="<?php ?>" ><?php echo $chart; ?></div>
 					<br/>
 				<?php } ?>
 			</section><!-- /.Left col -->
