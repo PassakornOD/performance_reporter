@@ -19,9 +19,10 @@ class Charts extends CI_Controller {
 		//print_r($datachart['startdate']);
 		foreach($datachart['list_group'] as $group){
 			//print_r($group);
-			foreach($datachart['list_name'] as $namehost){
+			//print_r($datachart['list_name']);
+			foreach($datachart['list_name'][$group] as $namehost){
 				//$this->set_format();
-				//print_r($namehost->hostname);
+				//print_r($namehost);
 				$datapeak[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
 				$chart=$this->daily_charts($datapeak[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
 				$data['charts']=$chart;
@@ -38,6 +39,7 @@ class Charts extends CI_Controller {
 				//$data['charts']=$this->daily_charts($setdata, $namehost);
 				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
 			}
+			$data['groupcharts'][]=$data['charts'];
 		}
 		//print_r($data);
 		$this->load->view('auth/charts', $data);
@@ -146,6 +148,7 @@ class Charts extends CI_Controller {
 	{
 		if(!empty($dataatts)){
 			foreach($dataatts as $q){
+				//print_r($q);
 				if($os == "RedHat" || $os == "Red Hat"){
 					if($flag=="Average"){
 						$data[$q->hostname_id]['nice']['data'][] = (float)$q->nice;

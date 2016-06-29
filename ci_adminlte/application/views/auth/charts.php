@@ -17,9 +17,9 @@
 			<!-- Left col -->
 			<section class="col-lg-10">
 				<!-- Custom tabs (Charts with tabs)-->
-				<?php foreach($charts as $chart){ ?>
+				<?php foreach($groupcharts as $chart){ ?>
 					<br/>
-					<div id="<?php ?>" ><?php echo $chart; ?></div>
+					<div id="<?php ?>" ><?php echo $chart['charts']; ?></div>
 					<br/>
 				<?php } ?>
 			</section><!-- /.Left col -->

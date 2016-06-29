@@ -41,11 +41,12 @@ class Genpdf extends CI_Controller {
 			$data['stopdate']=$stopdate;
 			$sql_select="hostname_id,hostname,OS,hostgroup.hostgroup,hostgroup.hostgroup_id";
 			$data['list_group']=$hostgroup;
+			//print_r($hostgroup);
 			//$this->load->view('auth/charts');
 			foreach($hostgroup as $group){
 				$list_host=$this->coreperformance->hname($group,$sql_select);
-				$data['list_name']=$list_host['sql'];
-				//print_r($list_host['sql'][0]);
+				$data['list_name'][$group]=$list_host['sql'];
+				//print_r($list_host['sql']);
 				//$num=0;
 				//foreach($list_host['sql'] as $lists){
 					//$data[$lists->hostname_id]=$this->coreperformance->cpu_usage_daily($lists, $startdate, $stopdate, $type_flag);
@@ -57,7 +58,7 @@ class Genpdf extends CI_Controller {
 					//echo "<br/>";
 				//}	
 			}
-			//print_r($data[$lists->hostname_id]['sardata']);
+			//print_r($data['list_name']);
 			//echo $num;
 			//return $data;
 		}
