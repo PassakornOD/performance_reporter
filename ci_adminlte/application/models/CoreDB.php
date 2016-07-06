@@ -114,6 +114,23 @@ class Coredb extends CI_Model{
 			
 		return false;
 	}
+	
+	public function sarcpu_monthly_query($mdata){
+		$query_res=false;
+		$this->db->select($mdata['select']);
+		$this->db->from($mdata['from']);
+		$this->db->where($mdata['where']);
+		$res = $this->db->get();
+		$rs = $res->result();
+		foreach($rs as $q){
+			//print_r($q->timeform);
+			$query_res[]=$q;
+			
+		}
+		//print_r($query_res);
+		//echo "<br/>";
+		return $query_res;
+	}
 }
 
 ?>

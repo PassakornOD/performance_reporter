@@ -10,7 +10,7 @@ $config['shared_options'] = array(
 				//array(1, 'rgb(240, 240, 255)')
 			)
 		),
-		'shadow' => false
+		'shadow' =>  false
 	)
 );
 
@@ -59,7 +59,7 @@ $config['chart_template'] = array(
 	$config['cpu_template'] = array(
 	'chart' => array(
 		'renderTo' => 'g_render',
-		'defaultSeriesType' => 'area',
+		'defaultSeriesType' => 'spline',
 		'backgroundColor' => array(
 			'linearGradient' => array(0, 0, 0, 0),
 			'stops' => array(
@@ -67,6 +67,10 @@ $config['chart_template'] = array(
 				//array(1, 'rgb(190, 200, 255)')
 			)
 		),
+		'spacingBottom' => 30,
+        'spacingTop' => 30,
+        'spacingLeft' => 10,
+        'spacingRight' => 10
      ),
      'colors' => array(
 		'#ED561B', '#50B432','#ED561B', '#50B432'
@@ -80,7 +84,9 @@ $config['chart_template'] = array(
 		'text' => 'Template from config file'
      ),
      'legend' => array(
-     	'enabled' => true
+     	'enabled' => true,
+        'borderColor' => '#000000',
+        'borderWidth' => 1
      ),
     'yAxis' => array(
 		'title' => array(

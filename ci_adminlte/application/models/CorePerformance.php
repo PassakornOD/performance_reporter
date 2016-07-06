@@ -1,6 +1,6 @@
 <?php
 
-class CorePerformance extends CI_Model{
+class Coreperformance extends CI_Model{
 	
 	public function __construct(){
 		
@@ -127,15 +127,22 @@ class CorePerformance extends CI_Model{
 		return $result;
 	}
 	
-	
-	public function set_flag_query($data){
-		
-		$data['select']=$select;
-		$data['where']=$where;
-		$data['group']=$group;
-		$data['order']=$order;
-		
-		return $data;
+	public function cpu_usage_monthly($host_query, $dateselect){
+		list($startY,$startM,$startD) = explode("-",$dateselect);
+		$dayofmonth = cal_days_in_month(CAL_GREGORIAN, $startM, $startY);
+		for($i=1; $i<=$dayofmonth; $i++){
+			$data['select']="TIME_FORMAT(time,'%H:%i') as timeform,idle";
+			$data['from']=$host_query->hostgroup.":u";
+			$data['where']="hostname_id='$host_query->hostname_id' AND YEAR(time)='$startY' AND MONTH(time)='$startM' AND DAY(time)='$i'";
+			$result[$i]=$this->coredb->sarcpu_monthly_query($data);
+			
+			
+		}
+		//print_r($result->idle);
+		//echo "<br/>";
+		//echo "<br/>";
+		//echo "<br/>";
+		return $result;
 	}
 
 }

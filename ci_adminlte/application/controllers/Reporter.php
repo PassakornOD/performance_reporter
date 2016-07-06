@@ -11,8 +11,6 @@ class Reporter extends CI_Controller {
 	
 	public function index(){
 		$num=0;
-		//$this->load->view('reporter/header');
-		
 		$res=$this->coreperformance->hgroup();
 		$data['hg_info']=$res;
 		foreach($res as $q){

@@ -28,14 +28,13 @@ class Charts extends CI_Controller {
 				$data['charts']=$chart;
 				$dataavg[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], "Average");
 				$chart=$this->daily_charts($dataavg[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, "Average");
-				//print_r($eachchart);
-				//print_r($namehost->hostname);
-				//print_r($data[$n]);
 				$data['charts']=$chart;
 				//print_r($data['charts']);
 				//$this->load->view('auth/charts', $data);
-				//$n++;
-				
+				$datamonthly[$namehost->hostname_id]=$this->coreperformance->cpu_usage_monthly($namehost, $datachart['startdate']);
+				//print_r(count($datamonthly[$namehost->hostname_id]));
+				$chart=$this->monthly_charts($datamonthly[$namehost->hostname_id], $namehost , $datachart['startdate']);
+				$data['charts']=$chart;
 				//$data['charts']=$this->daily_charts($setdata, $namehost);
 				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
 			}
@@ -198,7 +197,74 @@ class Charts extends CI_Controller {
 		}
 	}
 	
+	public function monthly_charts($dataatti, $host, $datestart){
+		$index=1;
+		list($startY,$startM,$startD) = explode("-",$datestart);
+		$linecolor=array('1' => '#ff0000', '2' => '#ff4000', '3' => '#ff8000', '4' => '#ffbf00',
+						 '5' => '#ffff00', '6' => '#bfff00', '7' => '#80ff00', '8' => '#40ff00',
+						 '9' => '#00ff00', '10' => '#00ff40', '11' => '#00ff80', '12' => '#00ffbf',
+						 '13' => '#00ffff', '14' => '#00bfff', '15' => '#0080ff', '16' => '#0040ff',
+						 '17' => '#0000ff', '18' => '#4000ff', '19' => '#8000ff', '20' => '#bf00ff',
+						 '21' => '#ff00ff', '22' => '#ff00bf', '23' => '#ff0080', '24' => '#ff0040',
+						 '25' => '#3333ff', '26' => '#00001a', '27' => '#99cc00', '28' => '#800000',
+						 '29' => '#663300', '30' => '#006666', '31' => '#333399'
+						);
+		$graph_data=$this->_cmonthly_data($dataatti);
+		//print_r($graph_data['axis']);
+		$this->load->library('highcharts');
+		if(!empty($graph_data)){
+			$this->highcharts->initialize('cpu_template'); // load template
+			$this->highcharts->set_dimensions(900, 495);	// dimension: width, height
+			$this->highcharts->set_title('CPU Monthly Usage' , 'Hostname : '. $host->hostname. '  Month : '." $startM/$startY");
+			$this->highcharts->push_xAxis($graph_data['axis']);
+			//print_r($graph_data[$index]);
+			foreach($graph_data as $g){
+				if(!empty($g['idle'])){
+				// we use push to not override template config
+				//print_r($g['idle']);
+				$this->highcharts->set_serie($g['idle'], $index);
+					// we want to display the second serie as sline. First parameter is the serie name
+				$this->highcharts->set_serie_options(array('type' => 'spline','lineColor' => "$linecolor[$index]" , 'lineWidth' => '0.98',
+					'shadow' => false, 'marker' => array('enabled' => false),'color' => "$linecolor[$index]"), $index);
+					$index++;
+					//echo $index;
+				}
+				}
+			$this->highcharts->render_to($host->hostname."monthly");
+			$data['charts']=$this->highcharts->render();
+			return $data;
+		}
+	}
 	
+	function _cmonthly_data($dataatts)
+	{	$data=[];
+		$xaix=true;
+		$dmonth=1;
+		if(!empty($dataatts)){
+			foreach($dataatts as $day){
+				
+				if(!empty($day)){
+					//print_r($day[$dmonth-1]->timeform);
+					/*foreach($day as $t)*/for($i=0;$i<count($day);$i++){
+						//print_r($t);
+						$data[$dmonth]['idle']['data'][$i] = 100-(float)$day[$i]->idle;
+						$data[$dmonth]['idle']['name'] = $dmonth;
+						if($xaix){
+							$data['axis']['categories'][$i] = (String)$day[$i]->timeform;
+							//print_r($t->timeform);
+						}
+						//print_r($dmonth);
+					}
+					$xaix=false;
+					
+				}
+				$dmonth++;
+			}			
+			return $data;
+		}else{
+			//echo "NO";
+		}
+	}
 	
 	
 	
