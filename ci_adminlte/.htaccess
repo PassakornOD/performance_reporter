@@ -1,4 +1,4 @@
 RewriteEngine On
 RewriteBase /ci_adminlte/
-RewriteCond $1 !^(index\.php|adminlte|bootstrap-3.3.2-dist|user_guide)
+RewriteCond $1 !^(index\.php|AdminLTE|bootstrap-3.3.2-dist|user_guide)
 RewriteRule ^(.*)$ index.php [L]

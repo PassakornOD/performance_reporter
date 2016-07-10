@@ -13,35 +13,52 @@ class Charts extends CI_Controller {
 	
 	public function get_data(){
 		$n=0;
-		$type_flag="Peak";
+		$type_flag="";
 		$datachart=$this->session->userdata('datacharts');
 		//$data['charts']=$this->daily_charts($datachart['508'], $datachart['list_name']);
 		//print_r($datachart['startdate']);
+		//$this->load->view('auth/charts');
 		foreach($datachart['list_group'] as $group){
 			//print_r($group);
 			//print_r($datachart['list_name']);
 			foreach($datachart['list_name'][$group] as $namehost){
 				//$this->set_format();
 				//print_r($namehost);
+				$type_flag="Peak";
 				$datapeak[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], $type_flag);
 				$chart=$this->daily_charts($datapeak[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
-				$data['charts']=$chart;
+				//$this->display($chart, $namehost->hostname."pack");
+				//$data['label'][]=$chart['label'];
+				$data['charts']=$chart['charts'];
+				//print_r($chart['charts']);
+				
+				$type_flag="Average";
 				$dataavg[$namehost->hostname_id]=$this->coreperformance->cpu_usage_daily($namehost, $datachart['startdate'], $datachart['stopdate'], "Average");
-				$chart=$this->daily_charts($dataavg[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, "Average");
-				$data['charts']=$chart;
-				//print_r($data['charts']);
-				//$this->load->view('auth/charts', $data);
+				$chart=$this->daily_charts($dataavg[$namehost->hostname_id], $datachart['startdate'], $datachart['stopdate'], $namehost, $type_flag);
+				//$data['label'][]=$chart['label'];
+				$data['charts']=$chart['charts'];
+
+				
 				$datamonthly[$namehost->hostname_id]=$this->coreperformance->cpu_usage_monthly($namehost, $datachart['startdate']);
-				//print_r(count($datamonthly[$namehost->hostname_id]));
 				$chart=$this->monthly_charts($datamonthly[$namehost->hostname_id], $namehost , $datachart['startdate']);
-				$data['charts']=$chart;
-				//$data['charts']=$this->daily_charts($setdata, $namehost);
-				//$data['genchart']=array('hostname' => $namehost->hostname, 'mychart' => $data[$namehost->hostname]);
+				//$data['label'][]=$chart['label'];
+				$data['charts']=$chart['charts'];
+
+				
 			}
-			$data['groupcharts'][]=$data['charts'];
+			
+			$data['groupcharts'][]=$data;
 		}
 		//print_r($data);
+		$data['datachart']=$datachart;
 		$this->load->view('auth/charts', $data);
+		
+	}
+	
+	public function display($chart, $id){
+		echo "<div><h2>".$chart['label']."<h2></div>";
+		echo "<div id=".$id.">".$chart['charts']."</div>";
+		print_r((object)$chart);
 		
 	}
 	
@@ -80,6 +97,7 @@ class Charts extends CI_Controller {
 							'shadow' => false, 'marker' => array('enabled' => false),'color' => '#FFCC00'), 'usr');
 					$this->highcharts->render_to($host->hostname."avg");
 					$data['charts']=$this->highcharts->render();
+					$data['label']=$host->hostname."-cpu-daily-".$type;
 			
 				}else{
 					$this->highcharts
@@ -95,6 +113,7 @@ class Charts extends CI_Controller {
 							'shadow' => false, 'marker' => array('enabled' => false),'color' => '#92A8CD'), '%avg');
 					$this->highcharts->render_to($host->hostname."peak");
 					$data['charts']=$this->highcharts->render();
+					$data['label']=$host->hostname."-cpu-daily-".$type;
 				}	
 			}else{
 				if($type=="Average"){
@@ -119,6 +138,7 @@ class Charts extends CI_Controller {
 							'shadow' => false, 'marker' => array('enabled' => false),'color' => '#FFCC00'), 'usr');
 					$this->highcharts->render_to($host->hostname."avg");
 					$data['charts']=$this->highcharts->render();
+					$data['label']=$host->hostname."-cpu-daily-".$type;
 			
 				}else{
 					$this->highcharts
@@ -134,6 +154,7 @@ class Charts extends CI_Controller {
 							'shadow' => false, 'marker' => array('enabled' => false),'color' => '#92A8CD'), '%avg');
 					$this->highcharts->render_to($host->hostname."peak");
 					$data['charts']=$this->highcharts->render();
+					$data['label']=$host->hostname."-cpu-daily-".$type;
 				}	
 				
 			}		
@@ -232,6 +253,7 @@ class Charts extends CI_Controller {
 				}
 			$this->highcharts->render_to($host->hostname."monthly");
 			$data['charts']=$this->highcharts->render();
+			$data['label']=$host->hostname."-cpu-monthly";
 			return $data;
 		}
 	}

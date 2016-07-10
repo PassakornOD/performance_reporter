@@ -58,7 +58,7 @@ $config['chart_template'] = array(
 	
 	$config['cpu_template'] = array(
 	'chart' => array(
-		'renderTo' => 'g_render',
+		'renderTo' => '',
 		'defaultSeriesType' => 'spline',
 		'backgroundColor' => array(
 			'linearGradient' => array(0, 0, 0, 0),
